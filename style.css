@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Archivo';
+    src: url('fonts/Archivo-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* Réinitialisation complète et styles de base */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -9,7 +17,7 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden; /* Fixe l'écran principal */
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Archivo', sans-serif;
     background-color: #ffffff;
     color: #ffffff;
     -webkit-font-smoothing: antialiased;
@@ -463,7 +471,7 @@ html, body {
     background: transparent;
     border: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    font-family: inherit;
+    font-family: 'Archivo', sans-serif;
     font-size: 1.05rem;
     color: #ffffff;
     outline: none;
@@ -507,7 +515,7 @@ html, body {
     border: none;
     padding: 16px 36px;
     border-radius: 30px;
-    font-family: inherit;
+    font-family: 'Archivo', sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 1px;
