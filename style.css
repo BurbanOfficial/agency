@@ -52,7 +52,7 @@ html, body {
 .orb-1 {
     width: 60vw;
     height: 60vw;
-    background: radial-gradient(circle, #000091 100%, rgba(30,64,175,0) 80%);
+    background: radial-gradient(circle, #0e0ed7 100%, rgba(30,64,175,0) 80%);
     top: -10%;
     left: -10%;
     animation: moveOrb1 5s infinite alternate ease-in-out;
@@ -70,7 +70,7 @@ html, body {
 .orb-3 {
     width: 45vw;
     height: 45vw;
-    background: radial-gradient(circle, #b546e5 100%, rgba(79,70,229,0) 80%);
+    background: radial-gradient(circle, #ce5cff 100%, rgba(79,70,229,0) 80%);
     top: 30%;
     right: 15%;
     animation: moveOrb3 5s infinite alternate ease-in-out;
@@ -79,7 +79,7 @@ html, body {
 .orb-4 {
     width: 40vw;
     height: 40vw;
-    background: radial-gradient(circle, #03a138 100%, rgba(3,105,161,0) 80%);
+    background: radial-gradient(circle, #12c54d 100%, rgba(3,105,161,0) 80%);
     bottom: 10%;
     left: 20%;
     animation: moveOrb4 5s infinite alternate ease-in-out;
@@ -384,23 +384,284 @@ html, body {
 }
 
 /* --- NAVIGATION MENU FLOTTANT --- */
-.floating-menu {
+/* Le conteneur parent qui aligne le menu et le bouton */
+.floating-menu-wrapper {
     position: fixed;
     bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px; /* L'espace "à part mais juste à côté" entre les deux blocs */
+    z-index: 100;
+}
+
+.floating-menu {
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     padding: 14px 34px;
-    border-radius: 40px;
+    border-radius: 40px; /* Arrondi complet tout autour */
     border: 1px solid rgba(255, 255, 255, 0.337);
-    z-index: 100;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
 }
 
 .floating-menu ul { list-style: none; display: flex; gap: 35px; }
-.floating-menu a { text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s ease; }
-.floating-menu a:hover, .floating-menu a.active { color: #ffffff; }
+.floating-menu a, .floating-menu .agence-trigger { text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s ease; cursor: default; }
+.floating-menu a:hover, .floating-menu a.active, .has-submenu:hover .agence-trigger { color: #ffffff; }
+
+/* Le bouton Contact — Aurora Glass (fidèle au composant Framer) */
+.contact-floating-btn {
+    position: relative;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #000000;
+    padding: 0 28px;
+    height: 48px;
+    border-radius: 28px;
+    border-top: 2px double rgba(255,255,255,0.57);
+    border-bottom: 2px solid transparent;
+    border-left: 2px outset rgba(0,0,0,0.49);
+    border-right: 2px solid rgba(233,79,202,0.7);
+    background: linear-gradient(
+        64.14deg,
+        #3b82f6 0%,
+        #5b8ef7 10%,
+        #8b5cf6 25%,
+        #a78ff7 40%,
+        #b87cf6 50%,
+        #c96ff5 60%,
+        #ec4899 75%,
+        #f060a8 85%,
+        #ea5ba3 92%,
+        #3b82f6 100%
+    );
+    filter: hue-rotate(-15deg) saturate(2);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: filter 0.5s ease, box-shadow 0.5s ease;
+    box-sizing: border-box;
+}
+
+.contact-floating-btn:hover {
+    filter: hue-rotate(-365deg) saturate(2);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+}
+
+.contact-floating-btn.active {
+    filter: hue-rotate(-365deg) saturate(2);
+}
+
+/* Couche glass interne */
+.contact-floating-btn .aurora-glass-inner {
+    position: absolute;
+    inset: 4px;
+    border-radius: 24px;
+    border: 2px double rgba(255,255,255,0.26);
+    background-color: rgba(255,255,255,0.11);
+    backdrop-filter: blur(2px);
+    filter: blur(1px) brightness(1.1) saturate(50%) hue-rotate(30deg);
+    box-shadow: inset 0 0 10px rgba(168,79,216,0.55);
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+}
+
+.contact-floating-btn .aurora-glass-inner-2 {
+    position: absolute;
+    inset: 4px;
+    border-radius: 24px;
+    border-left: 1px solid rgba(255,255,255,0.56);
+    border-right: 1px solid #ffffff;
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    box-shadow: inset 0 0 20px rgba(246,142,213,0.86);
+    filter: brightness(140%);
+    pointer-events: none;
+    z-index: 2;
+    display: block;
+}
+
+/* Nuages / orbes décoratifs */
+.contact-floating-btn .aurora-clouds {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.contact-floating-btn .aurora-clouds span {
+    position: absolute;
+    border-radius: 9999px;
+}
+
+/* Texte au-dessus de tout */
+.contact-floating-btn .aurora-label {
+    position: relative;
+    z-index: 10;
+    transition: font-size 0.8s ease, font-weight 0.8s ease;
+}
+
+.contact-floating-btn:hover .aurora-label {
+    font-weight: 800;
+}
+
+/* --- COMPOSANTS DU MENU MOBILE (Cachés par défaut) --- */
+.mobile-menu-toggle,
+.mobile-menu-close {
+    display: none;
+}
+
+/* Style global pour harmoniser les icônes SVG dans les boutons de fermeture */
+.mobile-menu-close svg,
+.modal-close-btn svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Ajustement spécifique pour la croix du menu mobile au survol */
+.mobile-menu-close:hover svg {
+    transform: rotate(90deg);
+    stroke: #030712; /* Aligné sur la couleur de fond sombre lors du survol */
+}
+
+/* Ajustement spécifique pour la croix de la modale projet au survol */
+.modal-close-btn:hover svg {
+    transform: rotate(90deg);
+    stroke: #000000; /* Ajustez selon la couleur souhaitée au survol de la modale */
+}
+
+/* --- AJUSTEMENT RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    /* 1. Affichage du bouton "Menu" flottant en bas */
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        padding: 14px 34px;
+        border-radius: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.337);
+        color: #ffffff;
+        font-family: 'Archivo', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    /* 2. Le conteneur du menu devient l'overlay plein écran caché par défaut */
+    .floating-menu-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        bottom: auto;
+        transform: none;
+        background: #000000;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+
+    /* 3. Classe d'activation gérée par JavaScript */
+    .floating-menu-wrapper.is-open {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* Masque le bouton hamburger quand le menu est ouvert */
+    .floating-menu-wrapper.is-open ~ .mobile-menu-toggle,
+    body.menu-open .mobile-menu-toggle {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* 4. Bouton de fermeture (Croix) en haut à droite */
+    .mobile-menu-close {
+        display: flex;
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.3s, transform 0.3s;
+    }
+
+    .mobile-menu-close:hover {
+        background: #ffffff;
+        color: #030712;
+        transform: rotate(90deg);
+    }
+
+    /* 5. Réinitialisation de la bulle d'arrière-plan des liens */
+    .floating-menu {
+        background: transparent;
+        border: none;
+        padding: 0;
+        filter: none;
+    }
+
+    /* 6. Mise en colonne des liens : chacun à la ligne */
+    .floating-menu ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .floating-menu a {
+        font-size: 1.8rem;
+    }
+
+    /* L'Agence à la même taille que les autres liens */
+    .floating-menu .agence-trigger {
+        font-size: 1.8rem;
+        cursor: pointer;
+    }
+
+    /* 7. Adaptation du bouton d'action */
+    .contact-floating-btn {
+        font-size: 1.1rem;
+        padding: 16px 36px;
+        transition: filter 0.5s ease, box-shadow 0.5s ease, opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Masquer le CTA quand le sous-menu est ouvert */
+    .floating-menu-wrapper:has(.mobile-submenu.is-open) .contact-floating-btn {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
 
 /* Responsive Plein Écran adaptatif */
 @media (max-width: 1024px) {
@@ -550,6 +811,52 @@ html, body {
 
 .submit-button:hover .btn-arrow {
     transform: translateX(4px);
+}
+
+/* --- OPEN HOURS BADGE --- */
+.open-hours-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    margin-top: 6px;
+}
+
+.open-hours-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.open-hours-badge.is-open .open-hours-dot {
+    background: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.6);
+    animation: pulse-green 2s infinite;
+}
+
+.open-hours-badge.is-closed .open-hours-dot {
+    background: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239,68,68,0.6);
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-green {
+    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+    70%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+@keyframes pulse-red {
+    0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+    70%  { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
 }
 
 /* Barre latérale d'informations */
@@ -854,8 +1161,8 @@ html, body {
     position: absolute;
     top: 25px;
     right: 25px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.439);
+    border: 2px solid rgba(255, 255, 255, 0.337);
     color: #ffffff;
     width: 44px;
     height: 44px;
@@ -959,6 +1266,76 @@ html, body {
     font-size: 1rem;
     color: #ffffff;
     font-weight: 400;
+}
+
+/* --- ENRICHISSEMENTS DE LA MODALE PROJETS --- */
+
+/* Bloc expertises effectues */
+.modal-scope-box {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-scope-box h5 {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+}
+
+.modal-scope-box p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 300;
+}
+
+/* Bloc Témoignage / Avis Client */
+.modal-review-quote {
+    margin-top: 25px;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 12px 12px 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Bouton d'action de visite de site */
+.modal-live-btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000000;
+    background: #ffffff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.modal-live-btn:hover {
+    background: rgba(255, 255, 255, 0.85);
+    transform: translateY(-2px);
+}
+
+/* Gestion de l'alignement du footer de la modale */
+.modal-footer-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto; /* Pousse le footer vers le bas */
+    padding-top: 30px;
+}
+
+.link-block {
+    margin-left: auto; /* Aligne le bouton tout à droite */
 }
 
 /* --- RESPONSIVE MODALE --- */
@@ -1121,3 +1498,452 @@ html, body {
     }
 }
 
+/* --- GESTION DES VUES CONTACT PAR DÉFAUT (DESKTOP) --- */
+.contact-desktop-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.contact-mobile-view {
+    display: none;
+}
+
+/* --- FORMULAIRE PAR ÉTAPES SUR MOBILE --- */
+@media (max-width: 768px) {
+    .contact-desktop-view {
+        display: none !important;
+    }
+    .contact-mobile-view {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 24px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+
+    .contact-mobile-container {
+        width: 100%;
+        max-width: 480px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .contact-mobile-header {
+        margin-bottom: 35px;
+    }
+
+    .mobile-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .mobile-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+    }
+
+    /* Étapes */
+    .mobile-step {
+        display: none;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .mobile-step.active {
+        display: flex;
+        animation: stepFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes stepFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Champs */
+    .mobile-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .mobile-field label {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 400;
+        letter-spacing: 0.5px;
+    }
+
+    .optional-tag {
+        font-size: 0.8rem;
+        opacity: 0.5;
+    }
+
+    .mobile-field input,
+    .mobile-field textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px;
+        border-radius: 12px;
+        color: #ffffff;
+        font-family: 'Archivo', sans-serif;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .mobile-field input:focus,
+    .mobile-field textarea:focus {
+        border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .mobile-field textarea {
+        resize: none;
+    }
+
+    /* Bouton Suivant */
+    .mobile-next-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        color: #030712;
+        border: none;
+        padding: 16px 24px;
+        border-radius: 30px;
+        font-family: 'Archivo', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 6px;
+        transition: background 0.3s;
+    }
+
+    .mobile-next-btn .step-indicator {
+        font-size: 0.75rem;
+        font-weight: 500;
+        opacity: 0.45;
+        letter-spacing: 1px;
+    }
+
+    .mobile-next-btn:hover {
+        background: rgba(255, 255, 255, 0.88);
+    }
+
+    /* Bouton Transmettre */
+    .mobile-submit-btn {
+        background: #ffffff;
+        color: #030712;
+        border: none;
+        padding: 16px 24px;
+        border-radius: 30px;
+        font-family: 'Archivo', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 6px;
+        transition: background 0.3s;
+        width: 100%;
+    }
+
+    .mobile-submit-btn:hover {
+        background: rgba(255, 255, 255, 0.88);
+    }
+
+    /* Écran de succès */
+    .mobile-success-screen {
+        display: none;
+        flex-direction: column;
+        gap: 16px;
+        animation: stepFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .mobile-success-screen.visible {
+        display: flex;
+    }
+
+    .mobile-success-icon {
+        font-size: 2rem;
+        opacity: 0.6;
+    }
+
+    .mobile-success-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .mobile-success-body {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+        font-weight: 300;
+    }
+
+    .mobile-success-hours {
+        margin-top: 8px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .mobile-success-schedule {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.5px;
+    }
+}        font-style: italic;
+    }
+}
+
+/* --- SOUS-MENU DESKTOP (L'AGENCE) --- */
+.has-submenu {
+    position: relative;
+}
+
+.desktop-submenu {
+    position: absolute;
+    bottom: calc(100% + 18px);
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    width: 420px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+}
+
+.has-submenu:hover .desktop-submenu,
+.desktop-submenu:hover {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Pont invisible pour ne pas casser le hover entre le lien et le sous-menu */
+.desktop-submenu::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+}
+
+.desktop-submenu-header {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.desktop-submenu-body {
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    gap: 14px;
+    align-items: stretch;
+}
+
+.desktop-submenu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.submenu-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px;
+    padding: 12px 14px !important;
+    border-radius: 12px;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    transition: background 0.2s ease !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.85rem !important;
+}
+
+.submenu-item:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+}
+
+.submenu-item-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.submenu-item-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 300;
+}
+
+.desktop-submenu-image {
+    border-radius: 10px;
+    overflow: hidden;
+    height: 100%;
+    min-height: 90px;
+}
+
+.desktop-submenu-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Flèche mobile — cachée sur desktop */
+.mobile-submenu-arrow {
+    display: none;
+}
+
+/* --- SOUS-MENU MOBILE --- */
+.mobile-submenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(60px);
+    filter: blur(20px);
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-submenu.is-open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+    filter: blur(0px);
+}
+
+.mobile-submenu-parent {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-submenu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.mobile-submenu ul a {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.mobile-submenu ul a:hover {
+    color: #ffffff;
+}
+
+.mobile-submenu-back {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: color 0.3s, background 0.3s;
+    white-space: nowrap;
+}
+
+.mobile-submenu-back:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    /* Wrapper flex pour L'Agence + flèche */
+    .agence-trigger-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    /* Flèche visible sur mobile */
+    .mobile-submenu-arrow {
+        display: inline-block;
+        position: static;
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.3);
+        line-height: 1;
+        cursor: pointer;
+        pointer-events: none;
+    }
+
+    .has-submenu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Cacher le sous-menu desktop sur mobile */
+    .desktop-submenu {
+        display: none !important;
+    }
+
+    /* Masquer le nav principal quand sous-menu ouvert */
+    .floating-menu.submenu-active {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(-60px);
+        filter: blur(20px);
+        transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-menu {
+        transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+}
