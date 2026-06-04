@@ -1,434 +1,96 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>North Agency</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agence V3</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <div class="language-selector">
-        <a href="#" class="lang-link active" aria-label="Passer en Français">FR</a>
-        <span class="lang-separator"></span>
-        <a href="#" class="lang-link" aria-label="Switch to English">EN</a>
+  <nav class="navbar">
+    <!-- Logo -->
+    <div class="nav-logo">
+      <span class="logo-text">AGENCE<span class="logo-dot">.</span></span>
     </div>
 
-    <div class="aurora-container">
-        <div class="aurora-orb orb-1"></div>
-        <div class="aurora-orb orb-2"></div>
-        <div class="aurora-orb orb-3"></div>
-        <div class="aurora-orb orb-4"></div>
+    <!-- Bouton central -->
+    <div class="btn-wrapper">
+      <button type="button" class="shiny-cta shiny-cta--compact">
+        <span>Démarrer un projet →</span>
+      </button>
     </div>
-    <div class="grain-overlay"></div>
 
-    <main class="sections-wrapper">
-        
-        <section id="accueil" class="page-section active">
-            <div class="hero-content">
-                <h1 class="agency-title">North Agency</h1>
-                <div class="quote-container">
-                    <p id="dynamic-quote" class="quote-text"></p>
-                </div>
-            </div>
-        </section>
+    <!-- Hamburger -->
+    <div class="nav-hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
 
-        <section id="projets" class="page-section">
-            <div class="projets-fullscreen-container">
-                <div class="projets-header">
-                    <span class="projets-subtitle">01 / SÉLECTION D'ŒUVRES</span>
-                    <h2 class="projets-title">Nos Différents Projets</h2>
-                </div>
+    <div class="menu-overlay" id="menuOverlay" data-open="false">
+        <canvas id="menuCanvasPoints"></canvas>
 
-                <div class="projets-grid">
-                    <div class="projet-card card-large" 
-                    data-title="Burban" 
-                    data-category="E-commerce & Design" 
-                    data-desc="Refonte complète du site Web e-commerce de lancement."
-                    data-detail="Pour Burban, notre mission consistait à remettre à jour complètement leur ancien site Web en apportant une expérience utilisateur ultra-fluide ainsi que de nombreux outils (CMS, Intégration de Stripe Checkout, etc.) pour gérer le plus efficacement possible le site Web."
-                    data-client="Burban" 
-                    data-date="Décembre 2025 — Février 2026"
-                    data-img="https://i.imgur.com/W49GlIR.png"
-                    
-                    data-scope="Direction Artistique, Développement Web, UI/UX Design, Identité Visuelle"
-                    data-review='"Une équipe créative et un résultat technique bien au-delà de nos attentes les plus exigeantes. Nous sommes ravis du résultat obtenu et recommanderons North Agency pour sûr." — La Direction Burban'
-                    data-link="https://burbanofficial.github.io/BURBAN-V8">
-                <div class="projet-image-wrapper">
-                    <img src="https://i.imgur.com/sDzarSH.png" alt="Projet Burban" class="projet-image">
-                    <div class="projet-overlay">
-                        <div class="projet-meta">
-                            <span class="projet-category">E-commerce & Design</span>
-                            <h4>Burban</h4>
-                            <p>Refonte complète du site Web e-commerce d'origine</p>
-                        </div>
-                        <span class="projet-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-
-                    <div class="projet-card" 
-                  data-title="Axl Std." 
-                    data-category="E-Portfolio & Design Créatif" 
-                    data-desc="Création d'un e-portfolio créatif sur-mesure."
-                    data-detail="Pour ce projet, un étudiant en AMA-CV devait réaliser un e-portfolio pour présenter ses travaux de manière créative et originale. Il est à l'origine des montages et des dessins, nous nous sommes chargés de la partie complexe."
-                    data-client="Axl Std."
-                    data-date="Février 2026"
-                    data-img="https://i.imgur.com/ZzFsbeI.png"
-                    
-                    data-scope="Développement Web, UI/UX Design, Intégration de contenus créatifs"
-                    data-review='"North Agency a su tranformer mes idées abstraites en quelque chose de concret. Je recommande fortement leur travail. Encore merci !" — Axl Std.'
-                    data-link="https://burbanofficial.github.io/BURBAN-V8">
-                <div class="projet-image-wrapper">
-                    <img src="https://i.imgur.com/pe0I2jf.png" alt="Projet Axl Std." class="projet-image">
-                    <div class="projet-overlay">
-                        <div class="projet-meta">
-                            <span class="projet-category">E-Portfolio Design</span>
-                            <h4>Axl Std.</h4>
-                            <p>Création d'un e-portolio créatif sur-mesure</p>
-                        </div>
-                        <span class="projet-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-
-                    <!-- <div class="projet-card card-large" 
-                 data-title="PALLADIUM ARCHIVE" 
-                 data-category="Développement Tailor-made" 
-                 data-desc="Indexation digitale et expérience d'archive interactive haute performance."
-                 data-detail="Le projet PALLADIUM est un défi de gestion de données et d'ergonomie. Nous avons conçu un moteur de recherche asynchrone ultra-rapide capable de filtrer des milliers d'éléments d'archives instantanément. L'esthétique globale s'inspire des designs de banques de données industrielles, modernisée pour l'ère actuelle."
-                 data-client="Palladium Foundation" 
-                 data-date="Septembre 2025"
-                 data-img="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80">
-                <div class="projet-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Projet PALLADIUM" class="projet-image">
-                    <div class="projet-overlay">
-                        <div class="projet-meta">
-                            <span class="projet-category">Développement Tailor-made</span>
-                            <h4>PALLADIUM ARCHIVE</h4>
-                            <p>Indexation digitale et expérience d'archive interactive haute performance.</p>
-                        </div>
-                        <span class="projet-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        </section>
-
-        <section id="vision" class="page-section">
-            <div class="agence-fullscreen-container">
-                <div class="agence-fullscreen-row row-manifesto">
-                    <div class="row-header">
-                        <span class="row-subtitle">01 / MANIFESTE</span>
-                        <h2 class="row-title">Notre Vision</h2>
-                    </div>
-                    <div class="row-body-split">
-                        <p class="large-manifesto-text">
-                            North Agency est une agence de création digitale spécialisée en marketing, design et développement Web sur mesure.
-                        </p>
-                        <p class="secondary-manifesto-text">
-                            Nous accompagnons les entreprises dans la conception de solutions digitales sur mesure, alliant stratégie, design et développement.<br><br>
-                            Notre philosophie : zéro compromis. Chaque projet est unique, chaque solution est pensée de A à Z pour répondre précisément à vos objectifs.
-                        </p>
-                    </div>
-                </div>
-                <div class="agence-fullscreen-row row-services">
-                    <div class="row-header">
-                        <span class="row-subtitle">02 / EXPERTISE</span>
-                        <h2 class="row-title">Ce que nous faisons</h2>
-                    </div>
-                    <div class="services-split">
-                        <div class="service-block">
-                            <h3>Stratégie, Design &amp; Marketing</h3>
-                            <p>Nous concevons des expériences numériques centrées sur vos utilisateurs, tout en imaginant des identités visuelles et des campagnes publicitaires cohérentes, pensées pour capter l’attention et renforcer votre image de marque.<br><br>Nous intervenons autant sur la structure digitale (sites, interfaces, parcours utilisateur) que sur la communication visuelle (publicité).</p>
-                        </div>
-                        <div class="service-block">
-                            <h3>Notre Approche</h3>
-                            <p>Zéro compromis. Nous analysons, épurons et concevons des solutions sur mesure, en plaçant l’expérience utilisateur au centre de chaque décision.</p>
-                        </div>
-                    </div>
-                    <br><br><br><h2>Vous avez carte blanche, nous donnons vie à vos idées.</h2>
-                </div>
-            </div>
-        </section>
-
-        <section id="equipe" class="page-section">
-            <div class="agence-fullscreen-container">
-                <div class="agence-fullscreen-row row-team">
-                    <div class="row-header">
-                        <span class="row-subtitle">01 / NOTRE ÉQUIPE</span>
-                        <h2 class="row-title">Qui sommes-nous ?</h2>
-                    </div>
-                    
-                    <div class="team-layout">
-                        <div class="team-text-side">
-                            <p>Nous sommes une équipe de trois étudiants passionnés par l’art et le digital : deux designers et un développeur. Formés en design et en Information-Communication, nous allions créativité, rigueur et vision stratégique.</p>
-                            
-                            <div class="fullscreen-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number" data-target="5">0</span>
-                                    <span class="stat-label">Années d'expérience</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-number" data-target="8">0</span>
-                                    <span class="stat-label">Projets & Clients</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="team-showcase-side">
-                            <div class="fullscreen-member">
-                                <div class="member-image-placeholder"><span>Axel</span></div>
-                                <div class="member-info"><h4>Axel CORMON</h4><p>Designer Graphique</p></div>
-                            </div>
-                            <div class="fullscreen-member">
-                                <div class="member-image-placeholder"><span>Jules</span></div>
-                                <div class="member-info"><h4>Jules MAXIMILIEN</h4><p>Designer Graphique</p></div>
-                            </div>
-                            <div class="fullscreen-member">
-                                <div class="member-image-placeholder">
-                                    <img src="https://i.imgur.com/BxKafs3.jpeg" alt="Rémy CORMON" class="member-image">
-                                </div>
-                                <div class="member-info"><h4>Rémy CORMON</h4><p>Développeur Full-Stack</p></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="page-section">
-            <div class="contact-fullscreen-container contact-desktop-view">
-                <div class="contact-header">
-                    <span class="contact-subtitle">PROJET &amp; COLLABORATION</span>
-                    <h2 class="contact-title">Parlons du futur.</h2>
-                </div>
-                
-                <div class="contact-layout">
-                    <form class="contact-form" autocomplete="off">
-                        <div class="form-row-split">
-                            <div class="form-field">
-                                <input type="text" id="form-name" required placeholder=" ">
-                                <label for="form-name">Nom complet</label>
-                            </div>
-                            <div class="form-field">
-                                <input type="email" id="form-email" required placeholder=" ">
-                                <label for="form-email">Adresse email</label>
-                            </div>
-                        </div>
-                        <div class="form-field">
-                            <input type="text" id="form-company" placeholder=" ">
-                            <label for="form-company">Entreprise / Organisation (Optionnel)</label>
-                        </div>
-                        <div class="form-field">
-                            <textarea id="form-message" required placeholder=" " rows="4"></textarea>
-                            <label for="form-message">Votre projet / Vision</label>
-                        </div>
-                        
-                        <button type="submit" class="submit-button">
-                            <span class="btn-text">Transmettre le signal</span>
-                        </button>
-                    </form>
-                    
-                    <div class="contact-sidebar">
-                        <div class="sidebar-item">
-                            <h5>Nous sommes là !</h5>
-                            <a href="mailto:hello@northagency.com" class="sidebar-link">hello@northagency.com</a>
-                        </div>
-                        <div class="sidebar-item">
-                            <h5>Horaires d'activité</h5>
-                            <div id="open-hours-badge" class="open-hours-badge is-closed">
-                                <span class="open-hours-dot"></span>
-                                <span id="open-hours-label">Chargement...</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VUE MOBILE PAR ÉTAPES -->
-            <div class="contact-mobile-view">
-                <div class="contact-mobile-container">
-                    <div class="contact-mobile-header">
-                        <span class="mobile-subtitle">PROJET &amp; COLLABORATION</span>
-                        <h2 class="mobile-title">Parlons du futur.</h2>
-                    </div>
-
-                    <form class="contact-form-mobile" autocomplete="off">
-                        <!-- Étape 1 -->
-                        <div class="mobile-step active" data-step="1">
-                            <div class="mobile-field">
-                                <label for="m-name">Nom complet</label>
-                                <input type="text" id="m-name" required placeholder="Jean Dupont">
-                            </div>
-                            <button type="button" class="mobile-next-btn" data-next="2">
-                                <span>Suivant</span>
-                                <span class="step-indicator">1/3</span>
-                            </button>
-                        </div>
-
-                        <!-- Étape 2 -->
-                        <div class="mobile-step" data-step="2">
-                            <div class="mobile-field">
-                                <label for="m-email">Adresse email</label>
-                                <input type="email" id="m-email" required placeholder="jean@exemple.com">
-                            </div>
-                            <div class="mobile-field">
-                                <label for="m-company">Entreprise / Organisation <span class="optional-tag">(Optionnel)</span></label>
-                                <input type="text" id="m-company" placeholder="North Agency">
-                            </div>
-                            <button type="button" class="mobile-next-btn" data-next="3">
-                                <span>Suivant</span>
-                                <span class="step-indicator">2/3</span>
-                            </button>
-                        </div>
-
-                        <!-- Étape 3 -->
-                        <div class="mobile-step" data-step="3">
-                            <div class="mobile-field">
-                                <label for="m-message">Votre projet / Vision</label>
-                                <textarea id="m-message" required placeholder="Décrivez votre projet..." rows="5"></textarea>
-                            </div>
-                            <button type="submit" class="mobile-submit-btn">
-                                <span class="btn-text">Transmettre le signal</span>
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Écran de succès -->
-                    <div class="mobile-success-screen" id="mobile-success-screen">
-                        <div class="mobile-success-icon">✦</div>
-                        <p class="mobile-success-title">Message envoyé !</p>
-                        <p class="mobile-success-body">Votre message a bien été envoyé. Nous vous répondons sous 24h.</p>
-                        <div class="mobile-success-hours">
-                            <div id="mobile-open-hours-badge" class="open-hours-badge is-closed">
-                                <span class="open-hours-dot"></span>
-                                <span id="mobile-open-hours-label">Chargement...</span>
-                            </div>
-                            <p class="mobile-success-schedule">Lundi — Samedi &nbsp;&middot;&nbsp; 09:00 — 18:00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-<div id="projet-modal" class="modal-overlay">
-    <div class="modal-wrapper">
-        <button class="modal-close-btn" aria-label="Fermer la modale">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-</button>
-        
-        <div class="modal-content-layout">
-            <div class="modal-visual-side">
-                <img id="modal-img" src="" alt="Visuel du projet">
-            </div>
+        <div class="menu-lang-box">
+            <p class="lang-box-text">
+            Vous êtes actuellement en <span class="lang-highlight">Français</span>.<br>
+            <span class="lang-subtext">Ce n'est pas la vôtre ? Changez-la ci-dessous.</span>
+            </p>
             
-            <div class="modal-info-side">
-                <div class="modal-header-info">
-                    <span id="modal-category" class="modal-tag"></span>
-                    <h3 id="modal-title"></h3>
-                </div>
-                
-                <div class="modal-body-info">
-                    <p id="modal-detail" class="modal-text-long"></p>
-                    
-                    <div class="modal-scope-box">
-                        <h5>Expertises nécessaires</h5>
-                        <p id="modal-scope"></p>
-                    </div>
-
-                    <blockquote id="modal-review" class="modal-review-quote"></blockquote>
-                </div>
-                
-                <div class="modal-footer-meta">
-                    <!--<div class="meta-block">
-                        <span>Client</span>
-                        <p id="modal-client"></p>
-                    </div>-->
-                    <div class="meta-block">
-                        <span>Date de réalisation</span>
-                        <p id="modal-date"></p>
-                    </div>
-                    
-                    <div class="meta-block link-block">
-                        <a id="modal-link" href="#" target="_blank" class="modal-live-btn">
-                            Visiter
-                        </a>
-                    </div>
-                </div>
+            <div class="lang-box-options">
+            <a href="#" class="lang-box-btn active">FR</a>
+            <span class="lang-box-separator">/</span>
+            <a href="#" class="lang-box-btn">EN</a>
             </div>
         </div>
-    </div>
-</div>
 
-   <button class="mobile-menu-toggle" aria-label="Ouvrir le menu">Menu</button>
+        <div class="menu-hours-box">
+            <div class="hours-header">
+                <span class="hours-title">Horaires d'ouverture</span>
+                <span class="hours-days">Lundi au Samedi : 9h - 18h</span>
+            </div>
 
-    <div class="floating-menu-wrapper" id="main-nav">
-        <button class="mobile-menu-close" aria-label="Fermer le menu">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-</button>
-        
-        <!-- Sous-menu mobile L'Agence -->
-        <div class="mobile-submenu" id="mobile-submenu-agence">
-            <button class="mobile-submenu-back">&#8592; Retour au menu</button>
-            <span class="mobile-submenu-parent">L'Agence</span>
-            <ul>
-                <li><a href="#vision" class="menu-link submenu-link" data-index="1">Notre vision</a></li>
-                <li><a href="#equipe" class="menu-link submenu-link" data-index="2">Notre équipe</a></li>
-            </ul>
+            <div class="menu-footer-line" style="margin: 15px 0; opacity: 0.5;"></div>
+
+            <div class="status-zone">
+                <p id="statusMessage" class="status-text">—</p>
+                <p id="statusUrgency" class="urgency-text"></p>
+            </div>
+
+            <a href="tel:+33100000000" id="phoneButton" class="phone-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="phone-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.58bV17.25A2.25 2.25 0 0 0 4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.58M2.25 6.58A2.25 2.25 0 0 1 4.5 4.5h15a2.25 2.25 0 0 1 2.25 2.08M2.25 6.58 11.25 12.75a1.5 1.5 0 0 0 1.5 0l9-6.17M12 18.75V12" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H14m-3.5 3H14m-6.75 16.5h13.5A2.25 2.25 0 0 0 21 18.75V5.25A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25v13.5A2.25 2.25 0 0 0 5.25 21Z" />
+                <path d="M9 17a3 3 0 0 0 6 0H9Z"/>
+                <path d="M12 14v.01M8 8h.01M16 8h.01M8 11h.01M16 11h.01"/>
+                </svg>
+                <span id="phoneButtonText">Afficher le numéro de téléphone</span>
+            </a>
         </div>
 
-        <nav class="floating-menu">
-            <ul>
-                <li><a href="#accueil" class="menu-link active" data-index="0">Accueil</a></li>
-                <li class="has-submenu">
-                    <span class="menu-link agence-trigger">L'Agence</span>
-                    <div class="desktop-submenu">
-                        <div class="desktop-submenu-header">L'Agence</div>
-                        <div class="desktop-submenu-body">
-                            <div class="desktop-submenu-items">
-                                <a href="#vision" class="menu-link submenu-item" data-index="1">
-                                    <span class="submenu-item-title">Notre vision</span>
-                                    <span class="submenu-item-desc">Notre positionnement &amp; manifeste</span>
-                                </a>
-                                <a href="#equipe" class="menu-link submenu-item" data-index="2">
-                                    <span class="submenu-item-title">Notre équipe</span>
-                                    <span class="submenu-item-desc">Qui sommes-nous ?</span>
-                                </a>
-                            </div>
-                            <div class="desktop-submenu-image">
-                                <img src="https://i.imgur.com/BxKafs3.jpeg" alt="L'Agence">
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li><a href="#projets" class="menu-link" data-index="3">Projets</a></li>
-            </ul>
-        </nav>
-        <a href="#contact" class="menu-link contact-floating-btn" data-index="4">
-            <span class="aurora-glass-inner"></span>
-            <span class="aurora-glass-inner-2"></span>
-            <span class="aurora-clouds">
-                <span style="filter:blur(3px) drop-shadow(-2px 0 3px #fff);left:25px;top:3px;width:50%;height:17%;background:linear-gradient(to right,rgba(255,255,255,0.87) 30%,transparent 100%)"></span>
-                <span style="left:40px;top:32%;width:20%;height:33%;background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,255,255,0) 70%);filter:drop-shadow(-10px 10px 3px #d277cc)"></span>
-                <span style="right:10px;top:8%;width:25%;height:83%;background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,255,255,0) 50%);filter:drop-shadow(-5px -5px 7px #ff5500b4)"></span>
-                <span style="right:0;top:17%;width:17%;height:67%;background:radial-gradient(circle,rgba(255,255,255,1) 0%,transparent 70%);filter:drop-shadow(-1px 0 30px #ff002f)"></span>
-                <span style="top:8%;width:100%;height:12%;background:radial-gradient(circle,rgba(255,255,255,0.29) 30%,rgba(255,181,21,0.16) 50%,rgba(234,44,255,0.42) 60%,rgba(255,255,255,0) 90%)"></span>
-                <span style="border-radius:100%;filter:blur(4px) drop-shadow(0px -10px 10px #ff5107fb);right:5px;bottom:0;width:25%;height:30%;background:radial-gradient(circle,rgba(255,255,255,0.77) 10%,rgba(255,255,255,0.16) 60%)"></span>
-                <span style="filter:blur(2px) drop-shadow(0px -10px 10px #f36b9d);right:10px;top:18%;width:30%;height:5%;background:radial-gradient(circle,rgba(255,255,255,0.97) 30%,rgba(255,255,255,0.16) 100%)"></span>
-                <span style="filter:blur(1px) drop-shadow(0px 0 3px #fff);left:5px;bottom:23%;width:100%;height:2%;background:radial-gradient(circle,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 90%)"></span>
-            </span>
-            <span class="aurora-label">Démarrer un projet</span>
-        </a>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="#" class="menu-link">Services</a></li>
+            <li class="menu-item"><a href="#" class="menu-link">L'équipe</a></li>
+            <li class="menu-item"><a href="#" class="menu-link">FAQ</a></li>
+            <li class="menu-item"><a href="#" class="menu-link">Contact</a></li>
+
+            <li class="menu-footer-section">
+                <div class="menu-footer-line"></div>
+                <a href="mailto:hello@agency.fr" class="menu-email">hello@agency.fr</a>
+            </li>
+        </ul>
+
+        <div class="menu-copyright">
+            © Agence <span id="currentYear"></span>. Tous Droits Réservés.
+        </div>
     </div>
 
-    <script src="script.js"></script>
+  <!-- Contenu placeholder -->
+  <main class="hero">
+    <h1>Bienvenue</h1>
+  </main>
+
+  <script src="main.js"></script>
 </body>
 </html>

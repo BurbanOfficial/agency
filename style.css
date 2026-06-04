@@ -6,1944 +6,782 @@
     font-display: swap;
 }
 
-/* Réinitialisation complète et styles de base */
 *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* Fixe l'écran principal */
-    font-family: 'Archivo', sans-serif;
-    background-color: #dfdfdf;
-    color: #ffffff;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* --- AURORA BACKDROP (PARTAGÉ) --- */
-.aurora-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    filter: blur(140px);
-    opacity: 0.6;
-    pointer-events: none;
-    /* --- BOOST GPU --- */
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
-}
-
-/* Style de base des orbes de couleur */
-.aurora-orb {
-    position: absolute;
-    border-radius: 50%;
-    mix-blend-mode: screen;
-    /* --- BOOST GPU --- */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
-
-.orb-1 {
-    width: 60vw;
-    height: 60vw;
-    background: radial-gradient(circle, #0e0ed7 100%, rgba(30,64,175,0) 80%);
-    top: -10%;
-    left: -10%;
-    animation: moveOrb1 5s infinite alternate ease-in-out;
-}
-
-.orb-2 {
-    width: 50vw;
-    height: 50vw;
-    background: radial-gradient(circle, #E1000F 100%, rgba(2,132,199,0) 80%);
-    bottom: -10%;
-    right: -5%;
-    animation: moveOrb2 5s infinite alternate ease-in-out;
-}
-
-.orb-3 {
-    width: 45vw;
-    height: 45vw;
-    background: radial-gradient(circle, #ce5cff 100%, rgba(79,70,229,0) 80%);
-    top: 30%;
-    right: 15%;
-    animation: moveOrb3 5s infinite alternate ease-in-out;
-}
-
-.orb-4 {
-    width: 40vw;
-    height: 40vw;
-    background: radial-gradient(circle, #12c54d 100%, rgba(3,105,161,0) 80%);
-    bottom: 10%;
-    left: 20%;
-    animation: moveOrb4 5s infinite alternate ease-in-out;
-}
-
-@keyframes moveOrb1 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(15vw, 10vh) scale(1.1); }
-    100% { transform: translate(-5vw, 20vh) scale(0.9); }
-}
-
-@keyframes moveOrb2 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-20vw, -15vh) scale(0.85); }
-    100% { transform: translate(10vw, -5vh) scale(1.15); }
-}
-
-@keyframes moveOrb3 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-10vw, 20vh) scale(1.2); }
-    100% { transform: translate(15vw, -10vh) scale(0.9); }
-}
-
-@keyframes moveOrb4 {
-    0% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(25vw, -20vh) scale(1.1); }
-    100% { transform: translate(-15vw, 10vh) scale(1); }
-}
-
-.grain-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    opacity: 0.05;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    /* --- BOOST GPU --- */
-    transform: translateZ(0);
-    will-change: opacity;
-}
-
-/* --- WRAPPER SECTIONS DE PAGES --- */
-.sections-wrapper {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2;
-}
-
-.page-section {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    /* --- BOOST GPU --- */
-    will-change: transform, opacity;
-    transform: translateZ(0); /* Force le rendu 3D matériel */
-    backface-visibility: hidden; /* Évite les recalculs de pixels invisibles */
-    perspective: 1000px; /* Améliore la fluidité des animations 3D/2D */
-}
-
-.page-section.active {
-    display: flex;
-}
-
-/* --- ANIMATIONS BLUR DIRECTIONNELLES --- */
-.anim-enter-next { display: flex !important; animation: blurSlideInRight 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.anim-exit-next { animation: blurSlideOutLeft 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.anim-enter-prev { display: flex !important; animation: blurSlideInLeft 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.anim-exit-prev { animation: blurSlideOutRight 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-@keyframes blurSlideOutLeft { from { transform: translateX(0); filter: blur(0px); opacity: 1; } to { transform: translateX(-40vw); filter: blur(50px); opacity: 0; } }
-@keyframes blurSlideInRight { from { transform: translateX(40vw); filter: blur(50px); opacity: 0; } to { transform: translateX(0); filter: blur(0px); opacity: 1; } }
-@keyframes blurSlideOutRight { from { transform: translateX(0); filter: blur(0px); opacity: 1; } to { transform: translateX(40vw); filter: blur(50px); opacity: 0; } }
-@keyframes blurSlideInLeft { from { transform: translateX(-40vw); filter: blur(50px); opacity: 0; } to { transform: translateX(0); filter: blur(0px); opacity: 1; } }
-
-/* --- ACCUEIL --- */
-.hero-content { text-align: center; }
-.agency-title { font-size: 5.5rem; font-weight: 700; letter-spacing: -3px; margin-bottom: 20px; }
-.quote-container { height: 35px; display: flex; justify-content: center; align-items: center; }
-.quote-text { font-size: 1.1rem; font-weight: 300; letter-spacing: 4px; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); transition: opacity 0.5s ease, transform 0.5s ease; opacity: 0; transform: translateY(8px); }
-.quote-text.visible { opacity: 1; transform: translateY(0); }
-
-/* --- LA NOUVELLE MISE EN PAGE PLEIN ÉCRAN "L'AGENCE" --- */
-.agence-fullscreen-container {
-    width: 100vw;
-    height: 100vh;
-    overflow-y: scroll; /* Scroll interne vertical fluide */
-    scroll-snap-type: y mandatory; /* Effet de blocage par écran sympa */
-    scrollbar-width: none; /* Cache la scrollbar sur Firefox */
-}
-
-.agence-fullscreen-container::-webkit-scrollbar {
-    display: none; /* Cache la scrollbar sur Chrome/Safari */
-}
-
-/* Chaque bloc thématique fait exactement la taille de l'écran */
-.agence-fullscreen-row {
-    width: 100vw;
-    height: 100vh;
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 10%;
-    position: relative;
-    box-sizing: border-box;
-}
-
-/* Lignes de séparation haut de gamme très fines */
-.agence-fullscreen-row:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 10%;
-    width: 80%;
-    height: 1px;
-    background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.05) 20%, rgba(255,255,255,0.05) 80%, rgba(255,255,255,0));
-}
-
-/* En-têtes d'écrans uniformes */
-.row-header {
-    margin-bottom: 40px;
-}
-
-.row-subtitle {
-    font-size: 0.8rem;
-    letter-spacing: 4px;
-    color: rgba(255, 255, 255, 0.4);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.row-title {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-/* ÉCRAN 1 : Éléments textes géants */
-.row-body-split {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 60px;
-    align-items: flex-start;
-}
-
-.large-manifesto-text {
-    font-size: 2.2rem;
-    font-weight: 300;
-    line-height: 1.4;
-    letter-spacing: -0.5px;
-    color: #ffffff;
-}
-
-.secondary-manifesto-text {
-    font-size: 1.15rem;
-    font-weight: 300;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.6);
-    padding-top: 10px;
-}
-
-/* ÉCRAN 2 : Dispositions Équipe et Chiffres */
-.team-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 60px;
-    align-items: center;
-}
-
-.team-text-side p {
-    font-size: 1.3rem;
-    font-weight: 300;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 40px;
-}
-
-/* Intégration Chiffres Premium */
-.fullscreen-stats {
-    display: flex;
-    gap: 50px;
-}
-
-.fullscreen-stats .stat-number {
-    font-size: 4.5rem;
-    font-weight: 700;
-    letter-spacing: -3px;
-    line-height: 1;
-    background: linear-gradient(180deg, #ffffff 30%, rgba(255,255,255,0.3) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.fullscreen-stats .stat-label {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
-    display: block;
-    margin-top: 5px;
-}
-
-/* Trombinoscope Minimaliste Rectangulaire Haute Couture */
-.team-showcase-side {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.fullscreen-member {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.4s ease, border-color 0.4s ease;
-}
-
-.fullscreen-member:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateY(-5px);
-}
-
-.member-image-placeholder {
-    width: 100%;
-    height: 240px; /* Force une hauteur identique pour les trois blocs */
-    background: linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.03) 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Empêche les images de dépasser */
-}
-
-.member-image-placeholder span {
-    font-size: 0.8rem;
-    letter-spacing: 3px;
-    color: rgba(255, 255, 255, 0.2);
-}
-
-/* Rendu propre et proportionnel des images de l'équipe */
-.member-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Recadre intelligemment l'image sans la déformer */
-    object-position: center;
-    display: block;
-}
-
-.member-info {
-    padding: 15px;
-    background: rgba(11, 11, 14, 0.8);
-    backdrop-filter: blur(5px);
-}
-
-.member-info h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 2px; }
-.member-info p { font-size: 0.75rem; color: rgba(255, 255, 255, 0.4); }
-
-/* Ajustements responsive pour les hauteurs d'images */
-@media (max-width: 1024px) {
-    .member-image-placeholder { height: 160px; }
-}
-
-@media (max-width: 768px) {
-    .member-image-placeholder { height: 220px; }
-}
-
-/* ÉCRAN 3 : Services */
-.services-split {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 80px;
-}
-
-.service-block h3 {
-    font-size: 1.5rem;
-    font-weight: 400;
-    letter-spacing: -0.5px;
-    margin-bottom: 20px;
-    position: relative;
-    padding-bottom: 15px;
-}
-
-.service-block h3::after {
-    content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 1px; background: rgba(255, 255, 255, 0.3);
-}
-
-.service-block p {
-    font-size: 1.15rem;
-    font-weight: 300;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* --- NAVIGATION MENU FLOTTANT --- */
-/* Le conteneur parent qui aligne le menu et le bouton */
-.floating-menu-wrapper {
-    position: fixed;
-    bottom: 45px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 12px; /* L'espace "à part mais juste à côté" entre les deux blocs */
-    z-index: 100;
-}
-
-.floating-menu {
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    padding: 14px 34px;
-    border-radius: 40px; /* Arrondi complet tout autour */
-    border: 1px solid rgba(255, 255, 255, 0.337);
-    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
-}
-
-.floating-menu ul { list-style: none; display: flex; gap: 35px; }
-.floating-menu a, .floating-menu .agence-trigger { text-decoration: none; color: rgba(255, 255, 255, 0.4); font-size: 0.85rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s ease; cursor: default; }
-.floating-menu a:hover, .floating-menu a.active, .has-submenu:hover .agence-trigger { color: #ffffff; }
-
-/* Le bouton Contact — Aurora Glass (fidèle au composant Framer) */
-.contact-floating-btn {
-    position: relative;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #000000;
-    padding: 0 28px;
-    height: 48px;
-    border-radius: 28px;
-    border-top: 2px double rgba(255,255,255,0.57);
-    border-bottom: 2px solid transparent;
-    border-left: 2px outset rgba(0,0,0,0.49);
-    border-right: 2px solid rgba(233,79,202,0.7);
-    background: linear-gradient(
-        64.14deg,
-        #3b82f6 0%,
-        #5b8ef7 10%,
-        #8b5cf6 25%,
-        #a78ff7 40%,
-        #b87cf6 50%,
-        #c96ff5 60%,
-        #ec4899 75%,
-        #f060a8 85%,
-        #ea5ba3 92%,
-        #3b82f6 100%
-    );
-    filter: hue-rotate(-15deg) saturate(2);
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
-    overflow: hidden;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: filter 0.5s ease, box-shadow 0.5s ease;
-    box-sizing: border-box;
-}
-
-.contact-floating-btn:hover {
-    filter: hue-rotate(-365deg) saturate(2);
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
-}
-
-.contact-floating-btn.active {
-    filter: hue-rotate(-365deg) saturate(2);
-}
-
-/* Couche glass interne */
-.contact-floating-btn .aurora-glass-inner {
-    position: absolute;
-    inset: 4px;
-    border-radius: 24px;
-    border: 2px double rgba(255,255,255,0.26);
-    background-color: rgba(255,255,255,0.11);
-    backdrop-filter: blur(2px);
-    filter: blur(1px) brightness(1.1) saturate(50%) hue-rotate(30deg);
-    box-shadow: inset 0 0 10px rgba(168,79,216,0.55);
-    pointer-events: none;
-    z-index: 1;
-    display: block;
-}
-
-.contact-floating-btn .aurora-glass-inner-2 {
-    position: absolute;
-    inset: 4px;
-    border-radius: 24px;
-    border-left: 1px solid rgba(255,255,255,0.56);
-    border-right: 1px solid #ffffff;
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    box-shadow: inset 0 0 20px rgba(246,142,213,0.86);
-    filter: brightness(140%);
-    pointer-events: none;
-    z-index: 2;
-    display: block;
-}
-
-/* Nuages / orbes décoratifs */
-.contact-floating-btn .aurora-clouds {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 3;
-}
-
-.contact-floating-btn .aurora-clouds span {
-    position: absolute;
-    border-radius: 9999px;
-}
-
-/* Texte au-dessus de tout */
-.contact-floating-btn .aurora-label {
-    position: relative;
-    z-index: 10;
-    transition: font-size 0.8s ease, font-weight 0.8s ease;
-}
-
-.contact-floating-btn:hover .aurora-label {
-    font-weight: 800;
-}
-
-/* --- COMPOSANTS DU MENU MOBILE (Cachés par défaut) --- */
-.mobile-menu-toggle,
-.mobile-menu-close {
-    display: none;
-}
-
-/* Style global pour harmoniser les icônes SVG dans les boutons de fermeture */
-.mobile-menu-close svg,
-.modal-close-btn svg {
-    width: 20px;
-    height: 20px;
-    display: block;
-    transition: transform 0.3s ease;
-}
-
-/* Ajustement spécifique pour la croix du menu mobile au survol */
-.mobile-menu-close:hover svg {
-    transform: rotate(90deg);
-    stroke: #030712; /* Aligné sur la couleur de fond sombre lors du survol */
-}
-
-/* Ajustement spécifique pour la croix de la modale projet au survol */
-.modal-close-btn:hover svg {
-    transform: rotate(90deg);
-    stroke: #000000; /* Ajustez selon la couleur souhaitée au survol de la modale */
-}
-
-/* --- AJUSTEMENT RESPONSIVE MOBILE --- */
-@media (max-width: 768px) {
-    /* 1. Affichage du bouton "Menu" flottant en bas */
-    .mobile-menu-toggle {
-        display: block;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 100;
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        padding: 14px 34px;
-        border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.337);
-        color: #ffffff;
-        font-family: 'Archivo', sans-serif;
-        font-size: 0.85rem;
-        font-weight: 500;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
-
-    /* 2. Le conteneur du menu devient l'overlay plein écran caché par défaut */
-    .floating-menu-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        bottom: auto;
-        transform: none;
-        background: #000000;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 50px;
-        z-index: 200;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.4s ease;
-    }
-
-    /* 3. Classe d'activation gérée par JavaScript */
-    .floating-menu-wrapper.is-open {
-        opacity: 1;
-        pointer-events: all;
-    }
-
-    /* Masque le bouton hamburger quand le menu est ouvert */
-    .floating-menu-wrapper.is-open ~ .mobile-menu-toggle,
-    body.menu-open .mobile-menu-toggle {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* 4. Bouton de fermeture (Croix) en haut à droite */
-    .mobile-menu-close {
-        display: flex;
-        position: absolute;
-        top: 25px;
-        right: 25px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #ffffff;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        cursor: pointer;
-        justify-content: center;
-        align-items: center;
-        transition: background 0.3s, transform 0.3s;
-    }
-
-    .mobile-menu-close:hover {
-        background: #ffffff;
-        color: #030712;
-        transform: rotate(90deg);
-    }
-
-    /* 5. Réinitialisation de la bulle d'arrière-plan des liens */
-    .floating-menu {
-        background: transparent;
-        border: none;
-        padding: 0;
-        filter: none;
-    }
-
-    /* 6. Mise en colonne des liens : chacun à la ligne */
-    .floating-menu ul {
-        flex-direction: column;
-        align-items: center;
-        gap: 40px;
-    }
-
-    .floating-menu a {
-        font-size: 1.8rem;
-    }
-
-    /* L'Agence à la même taille que les autres liens */
-    .floating-menu .agence-trigger {
-        font-size: 1.8rem;
-        cursor: pointer;
-    }
-
-    /* 7. Adaptation du bouton d'action */
-    .contact-floating-btn {
-        font-size: 1.1rem;
-        padding: 16px 36px;
-        transition: filter 0.5s ease, box-shadow 0.5s ease, opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* Masquer le CTA quand le sous-menu est ouvert */
-    .floating-menu-wrapper:has(.mobile-submenu.is-open) .contact-floating-btn {
-        opacity: 0;
-        pointer-events: none;
-    }
-}
-
-/* Responsive Plein Écran adaptatif */
-@media (max-width: 1024px) {
-    .row-body-split, .team-layout, .services-split { grid-template-columns: 1fr; gap: 30px; }
-    .large-manifesto-text { font-size: 1.6rem; }
-    .row-title { font-size: 2.2rem; }
-    .agence-fullscreen-row { padding: 60px 5%; justify-content: flex-start; padding-top: 10vh; height: auto; min-height: 100vh; }
-    .team-showcase-side { grid-template-columns: repeat(3, 1fr); }
-    .member-image-placeholder { height: 160px; }
-}
-
-@media (max-width: 768px) {
-    .agency-title { font-size: 3.2rem; }
-    .team-showcase-side { grid-template-columns: 1fr; }
-    .member-image-placeholder { height: 200px; }
-    .floating-menu { padding: 12px 20px; bottom: 20px; width: 90%; }
-    .floating-menu ul { gap: 15px; justify-content: center; }
-}
-
-/* --- SECTION CONTACT --- */
-.contact-fullscreen-container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 10%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.contact-header {
-    margin-bottom: 50px;
-}
-
-.contact-subtitle {
-    font-size: 0.8rem;
-    letter-spacing: 4px;
-    color: rgba(255, 255, 255, 0.4);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.contact-title {
-    font-size: 4rem;
-    font-weight: 700;
-    letter-spacing: -2px;
-    background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.5) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.contact-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 80px;
-    align-items: flex-start;
-}
-
-/* Formulaire architectural et épuré */
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 35px;
-}
-
-.form-row-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-.form-field {
-    position: relative;
-    width: 100%;
-}
-
-.form-field input,
-.form-field textarea {
-    width: 100%;
-    padding: 14px 0;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    font-family: 'Archivo', sans-serif;
-    font-size: 1.05rem;
-    color: #ffffff;
-    outline: none;
-    transition: border-color 0.4s ease;
-    resize: none;
-}
-
-/* Floating labels élégants */
-.form-field label {
-    position: absolute;
-    top: 14px;
-    left: 0;
-    font-size: 1.05rem;
-    color: rgba(255, 255, 255, 0.4);
-    pointer-events: none;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), font-size 0.3s ease, color 0.3s ease;
-    transform-origin: left top;
-}
-
-.form-field input:focus ~ label,
-.form-field input:not(:placeholder-shown) ~ label,
-.form-field textarea:focus ~ label,
-.form-field textarea:not(:placeholder-shown) ~ label {
-    transform: translateY(-22px) scale(0.8);
-    color: #ffffff;
-}
-
-.form-field input:focus,
-.form-field textarea:focus {
-    border-bottom-1px solid #ffffff;
-}
-
-/* Bouton Premium */
-.submit-button {
-    align-self: flex-start;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #ffffff;
-    color: #030712;
-    border: none;
-    padding: 16px 36px;
-    border-radius: 30px;
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    overflow: hidden;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.submit-button:hover {
-    background: rgba(255, 255, 255, 0.9);
-    transform: translateY(-2px);
-}
-
-.btn-arrow {
-    transition: transform 0.3s ease;
-}
-
-.submit-button:hover .btn-arrow {
-    transform: translateX(4px);
-}
-
-/* --- OPEN HOURS BADGE --- */
-.open-hours-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04);
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.85);
-    margin-top: 6px;
-}
-
-.open-hours-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.open-hours-badge.is-open .open-hours-dot {
-    background: #22c55e;
-    box-shadow: 0 0 0 0 rgba(34,197,94,0.6);
-    animation: pulse-green 2s infinite;
-}
-
-.open-hours-badge.is-closed .open-hours-dot {
-    background: #ef4444;
-    box-shadow: 0 0 0 0 rgba(239,68,68,0.6);
-    animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-green {
-    0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
-    70%  { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
-    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
-}
-
-@keyframes pulse-red {
-    0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-    70%  { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
-    100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-}
-
-/* Barre latérale d'informations */
-.contact-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    padding-top: 10px;
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-    padding-left: 40px;
-}
-
-.sidebar-item h5 {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.3);
-    margin-bottom: 12px;
-    font-weight: 600;
-}
-
-.sidebar-link {
-    font-size: 1.25rem;
-    color: #ffffff;
-    text-decoration: none;
-    background: linear-gradient(to right, #ffffff, #ffffff);
-    background-size: 0% 1px;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    transition: background-size 0.3s ease, color 0.3s ease;
-}
-
-.sidebar-link:hover {
-    background-size: 100% 1px;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.sidebar-item p {
-    font-size: 1.05rem;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.5;
-    font-weight: 300;
-}
-
-.white-carte-blanche {
-    color: #ffffff;
-    font-weight: 500;
-    letter-spacing: -0.5px;
-}
-
-/* --- ADAPTATIONS RESPONSIVE --- */
-@media (max-width: 1024px) {
-    .contact-layout {
-        grid-template-columns: 1fr;
-        gap: 50px;
-    }
-    .contact-sidebar {
-        border-left: none;
-        padding-left: 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding-top: 30px;
-    }
-    .contact-title {
-        font-size: 3rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .form-row-split {
-        grid-template-columns: 1fr;
-        gap: 35px;
-    }
-    .contact-fullscreen-container {
-        padding: 80px 5%;
-    }
-}
-
-/* --- SECTION PROJETS --- */
-.projets-fullscreen-container {
-    width: 100vw;
-    height: 100vh;
-    padding: 6vh 10% 12vh 10%;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    overflow-y: auto; /* Permet le défilement si le contenu dépasse sur petits écrans */
-    scrollbar-width: none;
-}
-
-.projets-fullscreen-container::-webkit-scrollbar {
-    display: none;
-}
-
-.projets-header {
-    margin-bottom: 40px;
-    flex-shrink: 0;
-}
-
-.projets-subtitle {
-    font-size: 0.8rem;
-    letter-spacing: 4px;
-    color: rgba(255, 255, 255, 0.4);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.projets-title {
-    font-size: 3rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-}
-
-/* Grille asymétrique haut de gamme */
-.projets-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    width: 100%;
-}
-
-.projet-card {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    height: 38vh; /* Hauteur relative proportionnelle à l'écran */
-    min-height: 280px;
-}
-
-/* Effet d'asymétrie alternée */
-.projet-card.card-large {
-    grid-column: span 1;
-}
-
-.projet-image-wrapper {
-    position: width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-}
-
-.projet-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Rideau sombre et flou au survol */
-.projet-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(3, 7, 18, 0.95) 10%, rgba(3, 7, 18, 0.2) 100%);
-    opacity: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 30px;
-    box-sizing: border-box;
-    transition: opacity 0.5s ease;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-}
-
-.projet-meta {
-    transform: translateY(20px);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    max-width: 80%;
-}
-
-.projet-category {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
-    display: block;
-    margin-bottom: 8px;
-}
-
-.projet-meta h4 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-    letter-spacing: -0.5px;
-}
-
-.projet-meta p {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 300;
-    line-height: 1.4;
-}
-
-.projet-arrow {
-    font-size: 1.5rem;
-    color: #ffffff;
-    transform: translateX(-10px);
-    opacity: 0;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
-}
-
-/* États d'activation du survol (Hover) */
-.projet-card:hover .projet-image {
-    transform: scale(1.05);
-}
-
-.projet-card:hover .projet-overlay {
-    opacity: 1;
-}
-
-.projet-card:hover .projet-meta {
-    transform: translateY(0);
-}
-
-.projet-card:hover .projet-arrow {
-    transform: translateX(0);
-    opacity: 1;
-}
-
-/* --- ADAPTATIONS RESPONSIVE PROJETS --- */
-@media (max-width: 1024px) {
-    .projets-grid {
-        grid-template-columns: 1fr; /* Passage sur une seule colonne */
-    }
-    .projet-card {
-        height: 320px;
-    }
-    .projets-fullscreen-container {
-        padding-top: 10vh;
-    }
-}
-
-@media (max-width: 768px) {
-    .projet-overlay {
-        opacity: 1; /* Reste visible sur mobile puisqu'il n'y a pas de survol souris */
-        background: linear-gradient(to top, rgba(3, 7, 18, 0.9) 30%, rgba(3, 7, 18, 0.1) 100%);
-        backdrop-filter: none;
-    }
-    .projet-meta {
-        transform: translateY(0);
-    }
-    .projet-arrow {
-        display: none;
-    }
-    .projets-title {
-        font-size: 2.2rem;
-    }
-}
-
-/* --- BOÎTE MODALE PROJETS (PREMIUM) --- */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(3, 7, 18, 0.4);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
-    z-index: 200;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* État actif de l'overlay */
-.modal-overlay.modal-active {
-    opacity: 1;
-    pointer-events: all;
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-}
-
-.modal-wrapper {
-    width: 85vw;
-    max-width: 1100px;
-    height: 75vh;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    position: relative;
-    overflow: hidden;
-    transform: scale(0.95) translateY(10px);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-}
-
-.modal-overlay.modal-active .modal-wrapper {
-    transform: scale(1) translateY(0);
-}
-
-/* Bouton de fermeture minimaliste */
-.modal-close-btn {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    background: rgba(255, 255, 255, 0.439);
-    border: 2px solid rgba(255, 255, 255, 0.337);
-    color: #ffffff;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    transition: background 0.3s, border-color 0.3s, transform 0.3s;
-}
-
-.modal-close-btn:hover {
-    background: #ffffff;
-    color: #030712;
-    transform: rotate(90deg);
-}
-
-.close-icon {
-    font-size: 0.9rem;
-    font-weight: 300;
-}
-
-/* Agencement interne */
-.modal-content-layout {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    width: 100%;
-    height: 100%;
-}
-
-.modal-visual-side {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-.modal-visual-side img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.modal-info-side {
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    overflow-y: auto;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.03) 100%);
-}
-
-.modal-tag {
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
-    display: block;
-    margin-bottom: 12px;
-}
-
-#modal-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1.1;
-}
-
-.modal-body-info {
-    margin: 40px 0;
-}
-
-.modal-text-long {
-    font-size: 1.05rem;
-    font-weight: 300;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.75);
-}
-
-/* Métadonnées en bas de modale */
-.modal-footer-meta {
-    display: flex;
-    gap: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding-top: 30px;
-}
-
-.meta-block span {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.3);
-    margin-bottom: 6px;
-}
-
-.meta-block p {
-    font-size: 1rem;
-    color: #ffffff;
-    font-weight: 400;
-}
-
-/* --- ENRICHISSEMENTS DE LA MODALE PROJETS --- */
-
-/* Bloc expertises effectues */
-.modal-scope-box {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.modal-scope-box h5 {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
-    margin-bottom: 8px;
-}
-
-.modal-scope-box p {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 300;
-}
-
-/* Bloc Témoignage / Avis Client */
-.modal-review-quote {
-    margin-top: 25px;
-    padding: 15px 20px;
-    background: rgba(255, 255, 255, 0.02);
-    border-left: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 0 12px 12px 0;
-    font-size: 0.9rem;
-    font-style: italic;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.65);
-}
-
-/* Bouton d'action de visite de site */
-.modal-live-btn {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #000000;
-    background: #ffffff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.modal-live-btn:hover {
-    background: rgba(255, 255, 255, 0.85);
-    transform: translateY(-2px);
-}
-
-/* Gestion de l'alignement du footer de la modale */
-.modal-footer-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto; /* Pousse le footer vers le bas */
-    padding-top: 30px;
-}
-
-.link-block {
-    margin-left: auto; /* Aligne le bouton tout à droite */
-}
-
-/* --- RESPONSIVE MODALE --- */
-@media (max-width: 1024px) {
-    .modal-content-layout {
-        grid-template-columns: 1fr;
-        grid-template-rows: 40% 60%;
-    }
-    .modal-wrapper {
-        height: 85vh;
-        width: 90vw;
-    }
-    .modal-info-side {
-        padding: 35px;
-    }
-    #modal-title {
-        font-size: 1.8rem;
-    }
-    .modal-body-info {
-        margin: 20px 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .modal-content-layout {
-        grid-template-rows: 30% 70%;
-    }
-    .modal-info-side {
-        padding: 25px;
-    }
-    .modal-footer-meta {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .modal-close-btn {
-        top: 15px;
-        right: 15px;
-        width: 36px;
-        height: 36px;
-    }
-}
-
-/* --- COMPOSANTS DU SYSTÈME DE RDV --- */
-.calendar-container {
-    width: 100%;
-}
-
-#appointment-date {
-    color-scheme: dark;
-}
-
-.slots-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 15px;
-}
-
-.slot-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 25px 15px;
-    text-align: center;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.slot-card:hover:not(.unavailable) {
-    background: #ffffff;
-    color: #030712;
-    transform: translateY(-4px);
-    border-color: #ffffff;
-}
-
-.slot-card .slot-time {
-    font-size: 1.25rem;
-    font-weight: 600;
-    display: block;
-}
-
-.slot-card .slot-status {
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-top: 6px;
-    display: block;
-}
-
-/* État Indisponible demandé */
-.slot-card.unavailable {
-    background: rgba(255, 255, 255, 0.01);
-    border-color: rgba(255, 255, 255, 0.02);
-    color: rgba(255, 255, 255, 0.15);
-    cursor: not-allowed;
-}
-
-.slot-card.unavailable .slot-status {
-    color: #E1000F; /* Aligné sur la couleur d'un de vos orbes */
-    opacity: 1;
-    font-weight: 500;
-}
-
-.active-label {
-    transform: translateY(-22px) scale(0.8) !important;
-    color: #ffffff !important;
-}
-
-/* Gestion de l'affichage de la modale */
-.modal-overlay.active {
-    display: flex !important;
-    opacity: 1;
-    pointer-events: all;
-}
-
-/* --- SÉLECTEUR DE LANGUE --- */
-.language-selector {
-    position: fixed;
-    top: 40px; /* Marge par rapport au haut de l'écran */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    padding: 10px 24px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.337);
-}
-
-.lang-link {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    transition: color 0.3s ease;
-}
-
-.lang-link:hover, 
-.lang-link.active {
-    color: #ffffff;
-}
-
-.lang-separator {
-    width: 1px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Ajustement responsive pour mobile */
-@media (max-width: 768px) {
-    .language-selector {
-        top: 20px;
-        padding: 8px 20px;
-        gap: 12px;
-    }
-}
-
-/* --- GESTION DES VUES CONTACT PAR DÉFAUT (DESKTOP) --- */
-.contact-desktop-view {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-.contact-mobile-view {
-    display: none;
-}
-
-/* --- FORMULAIRE PAR ÉTAPES SUR MOBILE --- */
-@media (max-width: 768px) {
-    .contact-desktop-view {
-        display: none !important;
-    }
-    .contact-mobile-view {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        padding: 30px 24px;
-        box-sizing: border-box;
-        overflow-y: auto;
-    }
-
-    .contact-mobile-container {
-        width: 100%;
-        max-width: 480px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .contact-mobile-header {
-        margin-bottom: 35px;
-    }
-
-    .mobile-subtitle {
-        font-size: 0.75rem;
-        letter-spacing: 2px;
-        color: rgba(255, 255, 255, 0.4);
-        text-transform: uppercase;
-        display: block;
-        margin-bottom: 8px;
-    }
-
-    .mobile-title {
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: -1px;
-    }
-
-    /* Étapes */
-    .mobile-step {
-        display: none;
-        flex-direction: column;
-        gap: 22px;
-    }
-
-    .mobile-step.active {
-        display: flex;
-        animation: stepFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes stepFadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Champs */
-    .mobile-field {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .mobile-field label {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.6);
-        font-weight: 400;
-        letter-spacing: 0.5px;
-    }
-
-    .optional-tag {
-        font-size: 0.8rem;
-        opacity: 0.5;
-    }
-
-    .mobile-field input,
-    .mobile-field textarea {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 16px;
-        border-radius: 12px;
-        color: #ffffff;
-        font-family: 'Archivo', sans-serif;
-        font-size: 1rem;
-        outline: none;
-        transition: border-color 0.3s;
-        box-sizing: border-box;
-    }
-
-    .mobile-field input:focus,
-    .mobile-field textarea:focus {
-        border-color: rgba(255, 255, 255, 0.35);
-    }
-
-    .mobile-field textarea {
-        resize: none;
-    }
-
-    /* Bouton Suivant */
-    .mobile-next-btn {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: #ffffff;
-        color: #030712;
-        border: none;
-        padding: 16px 24px;
-        border-radius: 30px;
-        font-family: 'Archivo', sans-serif;
-        font-size: 0.9rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        margin-top: 6px;
-        transition: background 0.3s;
-    }
-
-    .mobile-next-btn .step-indicator {
-        font-size: 0.75rem;
-        font-weight: 500;
-        opacity: 0.45;
-        letter-spacing: 1px;
-    }
-
-    .mobile-next-btn:hover {
-        background: rgba(255, 255, 255, 0.88);
-    }
-
-    /* Bouton Transmettre */
-    .mobile-submit-btn {
-        background: #ffffff;
-        color: #030712;
-        border: none;
-        padding: 16px 24px;
-        border-radius: 30px;
-        font-family: 'Archivo', sans-serif;
-        font-size: 0.9rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        margin-top: 6px;
-        transition: background 0.3s;
-        width: 100%;
-    }
-
-    .mobile-submit-btn:hover {
-        background: rgba(255, 255, 255, 0.88);
-    }
-
-    /* Écran de succès */
-    .mobile-success-screen {
-        display: none;
-        flex-direction: column;
-        gap: 16px;
-        animation: stepFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .mobile-success-screen.visible {
-        display: flex;
-    }
-
-    .mobile-success-icon {
-        font-size: 2rem;
-        opacity: 0.6;
-    }
-
-    .mobile-success-title {
-        font-size: 1.6rem;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
-
-    .mobile-success-body {
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.6);
-        line-height: 1.6;
-        font-weight: 300;
-    }
-
-    .mobile-success-hours {
-        margin-top: 8px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .mobile-success-schedule {
-        font-size: 0.85rem;
-        color: rgba(255, 255, 255, 0.35);
-        letter-spacing: 0.5px;
-    }
-}        font-style: italic;
-    }
-}
-
-/* --- SOUS-MENU DESKTOP (L'AGENCE) --- */
-.has-submenu {
-    position: relative;
-}
-
-.desktop-submenu {
-    position: absolute;
-    bottom: calc(100% + 18px);
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
-    width: 420px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 10;
-}
-
-.has-submenu:hover .desktop-submenu,
-.desktop-submenu:hover {
-    opacity: 1;
-    pointer-events: all;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* Pont invisible pour ne pas casser le hover entre le lien et le sous-menu */
-.desktop-submenu::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 0;
-    width: 100%;
-    height: 20px;
-}
-
-.desktop-submenu-header {
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.3);
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.desktop-submenu-body {
-    display: grid;
-    grid-template-columns: 1fr 110px;
-    gap: 14px;
-    align-items: stretch;
-}
-
-.desktop-submenu-items {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.submenu-item {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --orange:       #ff6a00;
+  --orangepale:       #ff6a0072;
+  --signal:       #ff6a00;
+  --glass-bg:     rgba(10, 10, 15, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --nav-control-size: 2.5rem;
+}
+
+body {
+  font-family: 'Archivo', sans-serif;
+  background: #0a0a0f;
+  color: #fff;
+  min-height: 200vh;
+}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(450px, 92vw);
+  height: 69px;
+  
+  /* Changement ici : on passe en Grid pour gérer les 3 zones */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; 
+  align-items: center;
+  
+  padding: 0 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 0px;
+  z-index: 1000;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── LOGO ───────────────────────────────────────────── */
+.nav-logo { flex: 1; }
+
+.logo-text {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.logo-dot { color: var(--orange); }
+
+/* ─── BOUTON CENTRAL ─────────────────────────────────── */
+.btn-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@property --gradient-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --gradient-angle-offset {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --gradient-percent {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 5%;
+}
+
+@property --gradient-shine {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #ffc69d;
+}
+
+@keyframes gradient-angle {
+  to { --gradient-angle: 360deg; }
+}
+
+@keyframes shimmer {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.shiny-cta,
+.shiny-cta::before,
+.shiny-cta::after {
+  animation:
+    gradient-angle 6s linear infinite,
+    gradient-angle calc(6s / .4) linear infinite reverse paused;
+  animation-composition: add;
+}
+
+.shiny-cta {
+  --shiny-cta-bg:              #18181a;
+  --shiny-cta-bg-subtle:       #2a2a2d;
+  --shiny-cta-fg:              #ffffff;
+  --shiny-cta-highlight:       var(--signal);
+  --shiny-cta-highlight-subtle:#ffb37c;
+  --shiny-cta-dot:             white;
+  --shadow-size: 2px;
+
+  isolation: isolate;
+  cursor: pointer;
+  outline-offset: 4px;
+  letter-spacing: -.005em;
+  color: var(--shiny-cta-fg);
+  background:
+    linear-gradient(var(--shiny-cta-bg), var(--shiny-cta-bg)) padding-box,
+    conic-gradient(
+      from calc(var(--gradient-angle) - var(--gradient-angle-offset)),
+      transparent,
+      var(--shiny-cta-highlight)        var(--gradient-percent),
+      var(--gradient-shine)             calc(var(--gradient-percent) * 2),
+      var(--shiny-cta-highlight)        calc(var(--gradient-percent) * 3),
+      transparent                       calc(var(--gradient-percent) * 4)
+    ) border-box;
+  border: 1px solid transparent;
+  border-radius: 0px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  font-weight: 500;
+  line-height: 1.2;
+  box-shadow: inset 0 0 0 1px var(--shiny-cta-bg-subtle);
+  
+  /* L'animation fluide sur l'ombre interne */
+  transition-property: --gradient-angle-offset, --gradient-percent, --gradient-shine, box-shadow;
+  transition-duration: 0.5s;            /* Légèrement allongé pour savourer l'estompement */
+  transition-timing-function: ease-in-out; /* Transition douce au départ et à la fin */
+}
+
+/* Taille compact */
+.shiny-cta--compact {
+  height: var(--nav-control-size);
+  min-height: var(--nav-control-size);
+  max-height: var(--nav-control-size);
+  gap: .45rem;
+  padding: 0 1.4rem;
+  font-size: .82rem;
+  line-height: 1;
+  align-self: center;
+}
+
+/* Hover */
+.shiny-cta:hover {
+  --gradient-angle-offset: 95deg;
+  --gradient-percent: 14%;
+  --gradient-shine: var(--shiny-cta-highlight-subtle);
+
+  /* -15px : pousse la source lumineuse vers le bas
+     28px : un très grand flou pour que la couleur s'estompe un maximum dans le cadre
+     25% : une opacité très douce pour éviter l'effet "flashy" bloqué sur les bords
+  */
+  box-shadow: 
+    inset 0 0 0 1px var(--shiny-cta-bg-subtle),
+    inset 0 -10px 28px color-mix(in srgb, var(--shiny-cta-highlight) 68%, transparent);
+
+    /* Configuration pour l'ENTRÉE (Mouse-enter) 👇 */
+  transition-duration: 0.3s;                /* Le flou apparaît une fraction de seconde */
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); /* Effet "snap" dynamique */
+}
+
+/* ::before — quadrillage de points animé par le même conic */
+.shiny-cta::before {
+  --size:     calc(100% - var(--shadow-size) * 3);
+  --position: 2px;
+  --space:    calc(var(--position) * 2);
+  content: '';
+  pointer-events: none;
+  z-index: -1;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  width:  var(--size);
+  height: var(--size);
+  border-radius: inherit;
+  opacity: .4;
+  background:
+    radial-gradient(
+      circle at var(--position) var(--position),
+      var(--shiny-cta-dot) calc(var(--position) / 4),
+      transparent 0
+    ) padding-box;
+  background-size: var(--space) var(--space);
+  background-repeat: space;
+  -webkit-mask-image: conic-gradient(
+    from calc(var(--gradient-angle) + 45deg),
+    black, transparent 10% 90%, black
+  );
+  mask-image: conic-gradient(
+    from calc(var(--gradient-angle) + 45deg),
+    black, transparent 10% 90%, black
+  );
+}
+
+/* ::after — shimmer interne */
+.shiny-cta::after {
+  content: '';
+  pointer-events: none;
+  z-index: -1;
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  aspect-ratio: 1;
+  width: 100%;
+  background: linear-gradient(-50deg, transparent, var(--shiny-cta-highlight), transparent);
+  opacity: .18;
+  -webkit-mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  mask-image: radial-gradient(circle at bottom, transparent 40%, black);
+  /* Ajoute cette ligne pour animer l'opacité du reflet */
+  transition: opacity 0.5s ease-in-out;
+}
+
+.shiny-cta:hover::after {
+  /* Passe l'opacité du reflet interne de 0.18 à 0.45 au survol */
+  opacity: 0.45;
+  transition: opacity 0.5s ease;
+}
+
+/* span::before — on désactive les dots statiques, le ::before animé suffit */
+.shiny-cta span::before { display: none; }
+
+/* ─── HAMBURGER ──────────────────────────────────────── */
+/* ─── HAMBURGER ──────────────────────────────────────── */
+.nav-hamburger {
+  justify-self: end; /* Aligne le carré tout à droite de sa colonne */
+  width: var(--nav-control-size);  /* Largeur fixe (40px) */
+  height: var(--nav-control-size); /* Hauteur fixe (40px) -> Carré parfait */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Centre les barres horizontalement dans le carré */
+  gap: 5px;
+  cursor: pointer;
+  
+  /* Style du cadre carré par défaut (Fermé) */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 0px; /* Coins rigides conformes au design de votre agence */
+  transition: all 0.3s ease;
+}
+
+/* ─── HOVER ÉTAT FERMÉ ───────────────────────────────── */
+/* Ne s'applique que si le menu n'est PAS ouvert (:not(.open)) */
+.nav-hamburger:not(.open):hover {
+  border-color: color-mix(in srgb, var(--orange) 50%, transparent);
+  background: rgba(255, 106, 0, 0.06);
+}
+
+.nav-hamburger:not(.open):hover span { 
+  background: var(--orange); 
+}
+
+/* ─── ÉTAT OUVERT (MENU ACTIF) ───────────────────────── */
+/* Le bouton complet passe en orange électrique dès l'ouverture */
+.nav-hamburger.open {
+  background: var(--orangepale) !important;
+  border-color: var(--orangepale) !important;
+}
+
+/* Force les barres (devenues une croix) à rester blanches pour le contraste */
+.nav-hamburger.open span {
+  background: #fff !important;
+}
+
+/* ─── STRUCTURE & ANIMATION DES BARRES INTERNES ──────── */
+.nav-hamburger span {
+  display: block;
+  height: 1.5px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.nav-hamburger span::before { display: none; }
+
+/* Tailles asymétriques d'origine */
+.nav-hamburger span:nth-child(1) { width: 22px; }
+.nav-hamburger span:nth-child(2) { width: 14px; }
+.nav-hamburger span:nth-child(3) { width: 18px; }
+
+/* Transformation des barres en croix (X) */
+.nav-hamburger.open span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+  width: 20px;
+}
+.nav-hamburger.open span:nth-child(2) { 
+  opacity: 0; 
+}
+.nav-hamburger.open span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+  width: 20px;
+}
+
+/* ─── HERO PLACEHOLDER ───────────────────────────────── */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 48px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.06);
+}
+
+/* ─── OVERLAY DU MENU ────────────────────────────────── */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.98); /* Fond sombre transparent */
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  z-index: 999; /* Juste en dessous de la navbar (1000) */
+  
+  display: flex;
+  align-items: center;
+  padding-left: 4rem; /* Alignement élégant décalé sur la gauche */
+  
+  /* Gestion de l'ouverture/fermeture */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Lorsque le menu est ouvert */
+.menu-overlay[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+}
+
+.menu-item {
+  overflow: hidden; /* Empêche les lettres de déborder du bloc ligne */
+}
+
+/* ─── EFFET TEXT-ROLL (VAGUE) ────────────────────────── */
+.menu-link {
+  font-family: var(--font-display, "Archivo", sans-serif);
+  letter-spacing: -.045em;
+  color: #fafafa;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: clamp(2.5rem, 8vw, 6.5rem); /* Taille ultra-adaptative */
+  font-weight: 600;
+  line-height: 0.95;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0.05em;
+  /* AJOUT : Donne de l'espace à gauche et à droite pour le "S" et le "t" */
+  padding-left: 0.05em;
+  padding-right: 0.05em;
+}
+
+.text-roll-row {
+  display: block;
+  white-space: nowrap;
+  position: relative;
+  height: 100%; /* Force la rangée à faire la taille brute du texte */
+}
+
+/* La ligne clonée en orange, positionnée pile sous l'originale */
+.text-roll-clone {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.text-roll-clone .text-roll-letter {
+  color: var(--orange);
+  transform: translateY(130%); /* Cachée en bas au départ */
+}
+
+/* Animation de chaque lettre */
+.text-roll-letter {
+  display: inline-block;
+  transform: translateY(0);
+  /* Utilisation d'un Bézier cubique typique des animations Apple/Premium */
+  transition: transform 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+  /* Décalage dynamique reçu du JS pour créer la vague */
+  transition-delay: calc(var(--i) * 0.03s);
+  /* AJOUTS POUR CORRIGER LES ARTEFACTS DE COULEUR (ANTI-ALIASING) */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* AJOUT : Permet aux empâtements des lettres de dépasser sans être coupés */
+  overflow: visible !important;
+}
+
+/* ─── ACTIONS AU HOVER ───────────────────────────────── */
+
+/* 1. Le texte original monte et disparaît vers le haut */
+.menu-link:hover .text-roll-row:not(.text-roll-clone) .text-roll-letter {
+  transform: translateY(-130%);
+}
+
+/* 2. Le texte orange monte depuis le bas et prend sa place */
+.menu-link:hover .text-roll-clone .text-roll-letter {
+  transform: translateY(0);
+}
+
+/* ─── SÉLECTEUR DE LANGUE (BOÎTE GLASSMORPHIC) ───────── */
+.menu-lang-box {
+  position: absolute;
+  top: 20%;
+  right: 5vw;
+  width: min(380px, 85vw);
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  font-family: 'Archivo', sans-serif;
+  z-index: 10;
+}
+
+.lang-box-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+.lang-highlight {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.lang-subtext {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.lang-box-options {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lang-box-btn {
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.3s ease;
+}
+
+/* État actif : le texte passe simplement en blanc pur, sans point en dessous */
+.lang-box-btn.active {
+  color: #fff;
+}
+
+/* Effet au survol des langues non sélectionnées */
+.lang-box-btn:hover:not(.active) {
+  color: var(--orange);
+}
+
+.lang-box-separator {
+  color: rgba(255, 255, 255, 0.12);
+  font-weight: 300;
+  pointer-events: none;
+}
+
+/* ─── FOOTER DU MENU (LINE & EMAIL) ──────────────────── */
+.menu-footer-section {
+  margin-top: 2rem; /* Espace important pour détacher le footer du reste */
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  /* On s'assure que la section prend la largeur du bloc de texte pour que la ligne s'aligne bien */
+  width: 100%; 
+  max-width: 400px; /* Limite la largeur de la ligne pour que ce soit élégant */
+}
+
+/* Le trait de séparation horizontal */
+.menu-footer-line {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg, 
+    var(--glass-border) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%
+  ); /* Un dégradé subtil qui s'efface vers la droite */
+}
+
+/* L'adresse e-mail */
+.menu-email {
+  font-family: 'Archivo', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem); /* S'adapte discrètement à l'écran */
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* Effet au survol de l'e-mail */
+.menu-email:hover {
+  color: var(--orange);
+  transform: translateX(4px); /* Léger décalage vers la droite au survol */
+}
+
+/* ─── EFFET POINTILLÉS SCINTILLANTS (CANVAS) ─────────── */
+
+#menuCanvasPoints {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1; /* Reste derrière le texte */
+  
+  /* Fondu progressif vers le bas de l'écran */
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* ─── FENÊTRE DES HORAIRES & STATUT ─────────────────── */
+.menu-hours-box {
+  position: absolute;
+  top: calc(20% + 220px); /* Positionnée précisément sous la boîte de langue */
+  right: 5vw;
+  
+  width: min(380px, 85vw);
+  padding: 25px 30px;
+  
+  /* Style Glassmorphic matching */
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  
+  font-family: 'Archivo', sans-serif;
+  z-index: 10;
+}
+
+.hours-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hours-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.hours-days {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Statuts dynamiques */
+.status-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+}
+
+.urgency-text {
+  font-size: 0.85rem;
+  color: var(--orange);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Bouton téléphone */
+.phone-btn {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.phone-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+/* État survolé (Quand l'agence est OUVERTE) */
+.phone-btn:not(.disabled):hover {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+
+.phone-btn:not(.disabled):hover .phone-icon {
+  transform: rotate(15deg) scale(1.1);
+}
+
+/* État BLOQUÉ (Quand l'agence est FERMÉE) */
+.phone-btn.disabled {
+  border-color: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.01);
+  color: rgba(255, 255, 255, 0.2);
+  cursor: not-allowed;
+  pointer-events: none; /* Bloque le clic nativement */
+}
+
+.phone-btn.disabled .phone-icon {
+  opacity: 0.2;
+}
+
+/* Bloque le scroll de la page en arrière-plan */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* ─── COPYRIGHT CENTRÉ EN BAS ───────────────────────── */
+.menu-copyright {
+  position: absolute;
+  bottom: 28px; /* Calé verticalement pour flotter élégamment au-dessus de la barre */
+  left: 50%;
+  transform: translateX(-50%); /* Centrage horizontal parfait */
+  
+  font-family: 'Archivo', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.3); /* Style discret assorti aux liens légaux */
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  z-index: 10; /* Passe au-dessus du fond pour rester visible */
+}
+
+/********************* RESPONSIVE & OPTIMISATIONS POUR MOBILE (MAX-WIDTH: 900px) *********************/
+
+/* ─── EN MOBILE : MENU PLEIN ÉCRAN ET FOOTER VERROUILLÉ EN BAS ─── */
+@media (max-width: 900px) {
+  
+  /* 1. L'OVERLAY PREND 100% DE L'ÉCRAN SANS SCROLL GLOBAL */
+  .menu-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    padding: 100px 2rem 180px 2rem !important; /* Gros padding en bas pour ne pas que le menu touche le footer */
+    display: block !important; /* On repasse en block pour gérer le défilement des liens */
+    overflow-y: auto !important; /* Seuls les liens du menu défileront si besoin */
+  }
+
+  /* 1. LES LIENS DU MENU : AJUSTEMENT DE L'ESPACE INTERNE */
+  .menu-list {
     display: flex !important;
     flex-direction: column !important;
-    gap: 3px;
-    padding: 12px 14px !important;
-    border-radius: 12px;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    transition: background 0.2s ease !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    font-size: 0.85rem !important;
-}
+    /* Le gap s'adapte à la hauteur de l'écran pour répartir les liens verticalement */
+    gap: clamp(1rem, 3.5vh, 2.5rem) !important; 
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
-.submenu-item:hover {
-    background: rgba(255, 255, 255, 0.06) !important;
-    color: #ffffff !important;
-}
+  /* Force les lignes à s'adapter */
+  .menu-item {
+    width: 100% !important;
+  }
 
-.submenu-item-title {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #ffffff;
-}
+  /* 2. ADAPTATION DYNAMIQUE DE LA TAILLE DU TEXTE */
+  .menu-link {
+    /* clamp(TailleMin, TailleFluideDépendanteDeLaHauteurEtLargeur, TailleMax) */
+    font-size: clamp(2rem, 5.5vw + 2.5vh, 4.5rem) !important;
+    line-height: 1 !important;
+    width: 100% !important;
+    display: inline-block !important;
+  }
 
-.submenu-item-desc {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-weight: 300;
-}
+  /* Ajustement de la rangée d'animation pour matcher la nouvelle taille */
+  .text-roll-row {
+    height: auto !important;
+  }
 
-.desktop-submenu-image {
-    border-radius: 10px;
-    overflow: hidden;
-    height: 100%;
-    min-height: 90px;
-}
+  /* 3. LE SÉLECTEUR FR / EN (LÉGÈREMENT PLUS ESPACÉ DU MENU) */
+  .menu-lang-box {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: 0 !important;
+    width: fit-content !important;
+    padding: 10px 20px !important;
+    /* La marge haute s'adapte aussi à l'écran pour pousser intelligemment vers le bas */
+    margin-top: clamp(2rem, 5vh, 5rem) !important; 
+    margin-bottom: 2rem !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid var(--glass-border) !important;
+    box-shadow: none !important;
+  }
 
-.desktop-submenu-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
+  .lang-box-text {
+    display: none !important; /* Sécurité : toujours masqué */
+  }
 
-/* Flèche mobile — cachée sur desktop */
-.mobile-submenu-arrow {
-    display: none;
-}
+  /* 4. LE BLOC HORAIRES TOTALEMENT DISPARU */
+  .menu-hours-box {
+    display: none !important;
+  }
 
-/* --- SOUS-MENU MOBILE --- */
-.mobile-submenu {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(60px);
-    filter: blur(20px);
-    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
+  /* 5. LE FOOTER : PROJETÉ ET VERROUILLÉ TOUT EN BAS DE L'ÉCRAN */
+  .menu-footer-section {
+    position: fixed !important;
+    bottom: 80px !important; /* Posé pile au-dessus de votre barre technique noire */
+    left: 2rem !important;
+    width: calc(100% - 4rem) !important; /* Prend toute la largeur moins les paddings */
+    margin: 0 !important;
+    z-index: 20 !important;
+  }
 
-.mobile-submenu.is-open {
-    opacity: 1;
-    pointer-events: all;
-    transform: translateX(0);
-    filter: blur(0px);
-}
+  /* On force l'e-mail à s'aligner à gauche */
+  .menu-footer-wrapper {
+    display: flex !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+  }
 
-.mobile-submenu-parent {
-    font-size: 0.75rem;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.3);
-}
-
-.mobile-submenu ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-}
-
-.mobile-submenu ul a {
-    font-size: 1.8rem;
-    color: rgba(255, 255, 255, 0.4);
-    text-decoration: none;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    transition: color 0.3s ease;
-}
-
-.mobile-submenu ul a:hover {
-    color: #ffffff;
-}
-
-.mobile-submenu-back {
-    position: absolute;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.5);
-    font-family: 'Archivo', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 10px 24px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: color 0.3s, background 0.3s;
-    white-space: nowrap;
-}
-
-.mobile-submenu-back:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 768px) {
-    /* Wrapper flex pour L'Agence + flèche */
-    .agence-trigger-wrapper {
-        display: inline-flex;
-        align-items: center;
-        gap: 18px;
-    }
-
-    /* Flèche visible sur mobile */
-    .mobile-submenu-arrow {
-        display: inline-block;
-        position: static;
-        font-size: 1.4rem;
-        color: rgba(255, 255, 255, 0.3);
-        line-height: 1;
-        cursor: pointer;
-        pointer-events: none;
-    }
-
-    .has-submenu {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Cacher le sous-menu desktop sur mobile */
-    .desktop-submenu {
-        display: none !important;
-    }
-
-    /* Masquer le nav principal quand sous-menu ouvert */
-    .floating-menu.submenu-active {
-        opacity: 0;
-        pointer-events: none;
-        transform: translateX(-60px);
-        filter: blur(20px);
-        transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .floating-menu {
-        transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+  /* 7. LE COPYRIGHT : CENTRÉ TOUT EN BAS DANS LA BARRE TECHNIQUE */
+  .menu-copyright {
+    position: fixed !important;
+    bottom: 25px !important; /* Centré verticalement dans les 80px de la barre du bas */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    z-index: 22 !important;
+  }
 }
